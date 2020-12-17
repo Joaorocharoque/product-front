@@ -1,19 +1,26 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import CardList from './containers/Cards/CardsList';
+import api from '../api';
 
 const AppProduct = () => {
   console.log(`App RENDERING`);
 
-  const [productsList, setProductsList] = useState([
-    { id: Math.random().toString(36).substring(7), name: 'brownie', flavor: 'chocolate', price: 14.90, expirationDate: '2021-01-01', brand:'Divine'},
-    { id: Math.random().toString(36).substring(7), name: 'cookie', flavor: 'chocolate', price: 8.90, expirationDate: '2021-01-01', brand:'Divine' },
-    { id: Math.random().toString(36).substring(7), name: 'cup cake', flavor: 'chocolate', price: 4.90, expirationDate: '2021-01-01', brand:'Divine' },
-    { id: Math.random().toString(36).substring(7), name: 'Smoothing', flavor: 'fruit', price: 10.90, expirationDate: '2021-01-01', brand:'Divine' },
-  ]);
+  const [productsList, setProductsList] = useState([]);
 
-  const onRemoveItemHandler = (id) => {
-    setProductsList(products => 
-      products.filter(product => product.id !== id))
+  useEffect(() => {
+      api.get().then(response => {
+        setProductsList(response.data);
+      });
+  }, [productsList])
+
+  async function onRemoveItemHandler(id){
+        await api.delete("/" + id).then(response => {
+            console.log(response)
+        });
+
+        await api.get().then(response => {
+            setProductsList(response.data);
+        });
   };
 
   const onEditItemHandler = (editedProduct) => {
@@ -31,17 +38,18 @@ const AppProduct = () => {
     )
   };
 
-  const onAddItemHandler = (product) => {
-    setProductsList(products => [
-      ...products, 
-      { id: Math.random().toString().substring(),
-        price: product.price,
-        flavor: product.flavor, 
-        name: product.name,
-        expirationDate: product.expirationDate,
-        brand: product.brand
-      }
-    ])
+  async function onAddItemHandler(product){
+        const response = await api.post("", { 
+            price: product.price,
+            flavor: product.flavor, 
+            name: product.name,
+            expirationDate: product.expirationDate,
+            brand: product.brand
+        });
+
+        const prod = response.data;
+
+        setProductsList([...productsList, prod]);
   };
 
   return (

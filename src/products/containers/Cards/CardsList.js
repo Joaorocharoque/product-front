@@ -42,6 +42,8 @@ const CardsList = React.memo((props) => {
     setOpen(false)
   };
 
+  console.log(props.products);
+
   const cards = props.products
     .filter(item => item.name.toLowerCase().includes(searchTerm))
     .map((item, index) => (
