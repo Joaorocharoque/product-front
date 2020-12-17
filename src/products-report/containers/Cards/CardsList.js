@@ -72,7 +72,7 @@ const CardsList = React.memo((props) => {
 
   return (
     <Fragment>
-      <h2 className={css.Title}>Products</h2>
+      <h2 className={css.Title}>Expired Products</h2>
       <div className={css.CardList}>
         <input
             type="text"

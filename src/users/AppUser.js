@@ -1,46 +1,54 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import CardList from './containers/Cards/CardsList';
+import apiUser from '../apiUser';
 
 const AppUser = () => {
   console.log(`App RENDERING`);
 
 
-  const [usersList, setUsersList] = useState([
-    { id: Math.random().toString(36).substring(7), name: 'Joao', cpf: '124.616.461.44', email: 'joao@gmail.com', password: '****'},
-    { id: Math.random().toString(36).substring(7), name: 'Ana', cpf: '546.446.649.34', email: 'ana@gmail.com', password: '****' },
-    { id: Math.random().toString(36).substring(7), name: 'Carlos', cpf: '654.346.819.98', email: 'carlos@gmail.com', password: '****' },
-    { id: Math.random().toString(36).substring(7), name: 'Maria', cpf: '854.649.649.52', email: 'maria@gmail.com', password: '****' },
-  ]);
+  const [usersList, setUsersList] = useState([]);
 
-  const onRemoveItemHandler = (id) => {
-    setUsersList(users => 
-      users.filter(user => user.id !== id))
+  useEffect(() => {
+    apiUser.get().then(response => {
+      setUsersList(response.data);
+    });
+  }, [usersList])
+
+  async function onRemoveItemHandler(id){
+    await apiUser.delete("/" + id).then(response => {
+      console.log(response)
+    });
+    
+    await apiUser.get().then(response => {
+      setUsersList(response.data);
+    });
   };
 
-  const onEditItemHandler = (editedUser) => {
-    setUsersList(users => 
-      users.map(user => user.id === editedUser.id ? 
-        {
-          ...user,
-          name: editedUser.name,
-          cpf: editedUser.cpf,
-          email: editedUser.email,
-          password:editedUser.password
-        } 
-        : user) 
-    )
+  async function onEditItemHandler(editedUser){
+   await apiUser.put("/" + editedUser.id,{
+      name: editedUser.name,
+      cpf: editedUser.cpf,
+      email: editedUser.email,
+      password:editedUser.password
+    });
+
+    await apiUser.get().then(response => {
+      setUsersList(response.data);
+    })
+    
   };
 
-  const onAddItemHandler = (user) => {
-    setUsersList(users => [
-      ...users, 
-      { id: Math.random().toString().substring(),
-        cpf: user.cpf,
-        email: user.email, 
-        name: user.name,
-        password: user.password
-      }
-    ])
+  async function onAddItemHandler(user){
+    const response = await apiUser.post("",{
+      cpf: user.cpf,
+      email: user.email, 
+      name: user.name,
+      password: user.password
+    });
+
+    const users = response.data;
+
+    setUsersList([...usersList, users])
   };
 
   return (

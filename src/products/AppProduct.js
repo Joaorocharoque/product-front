@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import CardList from './containers/Cards/CardsList';
-import api from '../api';
+import apiProduct from '../apiProduct';
 
 const AppProduct = () => {
   console.log(`App RENDERING`);
@@ -8,38 +8,38 @@ const AppProduct = () => {
   const [productsList, setProductsList] = useState([]);
 
   useEffect(() => {
-      api.get().then(response => {
+    apiProduct.get().then(response => {
         setProductsList(response.data);
       });
-  }, [productsList])
+  }, [])
 
   async function onRemoveItemHandler(id){
-        await api.delete("/" + id).then(response => {
+        await apiProduct.delete("/" + id).then(response => {
             console.log(response)
         });
 
-        await api.get().then(response => {
+        await apiProduct.get().then(response => {
             setProductsList(response.data);
         });
   };
 
-  const onEditItemHandler = (editedProduct) => {
-    setProductsList(products => 
-      products.map(product => product.id === editedProduct.id ? 
-        {
-          ...product,
+  async function onEditItemHandler(editedProduct){
+    await apiProduct.put("/" + editedProduct.id,{
           name: editedProduct.name,
           flavor: editedProduct.flavor,
           price: editedProduct.price,
           expirationDate:editedProduct.expirationDate,
           brand: editedProduct.brand
-        } 
-        : product) 
-    )
+        });
+
+        await apiProduct.get().then(response => {
+          setProductsList(response.data);
+      });
+        
   };
 
   async function onAddItemHandler(product){
-        const response = await api.post("", { 
+        const response = await apiProduct.post("", { 
             price: product.price,
             flavor: product.flavor, 
             name: product.name,
