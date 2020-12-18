@@ -10,8 +10,6 @@ const AddCard = React.memo((props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
-
-
   const submitHandler = (event) => {
     event.preventDefault();
     props.add({ name: name, cpf: cpf, email: email, password: password});

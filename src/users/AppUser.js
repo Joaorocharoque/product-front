@@ -36,7 +36,7 @@ const AppUser = (props) => {
   };
 
   async function onAddItemHandler(user){
-    const response = await apiGateway.post("",{
+    const response = await apiGateway.post("/user",{
       cpf: user.cpf,
       email: user.email, 
       name: user.name,
