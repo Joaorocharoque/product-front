@@ -1,50 +1,47 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import CardList from './containers/Cards/CardsList';
-import apiUser from '../apiUser';
+import apiGateway from "../apiGateway";
 
-const AppUser = () => {
-  console.log(`App RENDERING`);
-
-
+const AppUser = (props) => {
   const [usersList, setUsersList] = useState([]);
 
   useEffect(() => {
-    apiUser.get().then(response => {
+    apiGateway.get("/user", props.getHeader()).then(response => {
       setUsersList(response.data);
     });
-  }, [usersList])
+  }, [])
 
   async function onRemoveItemHandler(id){
-    await apiUser.delete("/" + id).then(response => {
+    await apiGateway.delete("/user/" + id, props.getHeader()).then(response => {
       console.log(response)
     });
     
-    await apiUser.get().then(response => {
+    await apiGateway.get("/user", props.getHeader()).then(response => {
       setUsersList(response.data);
     });
   };
 
   async function onEditItemHandler(editedUser){
-   await apiUser.put("/" + editedUser.id,{
+   await apiGateway.put("/user/" + editedUser.id,{
       name: editedUser.name,
       cpf: editedUser.cpf,
       email: editedUser.email,
       password:editedUser.password
-    });
+    }, props.getHeader());
 
-    await apiUser.get().then(response => {
+    await apiGateway.get("/user", props.getHeader()).then(response => {
       setUsersList(response.data);
     })
     
   };
 
   async function onAddItemHandler(user){
-    const response = await apiUser.post("",{
+    const response = await apiGateway.post("",{
       cpf: user.cpf,
       email: user.email, 
       name: user.name,
       password: user.password
-    });
+    }, props.getHeader());
 
     const users = response.data;
 

@@ -5,7 +5,6 @@ import CardList from './containers/Cards/CardsList';
 const AppProductReport = () => {
   console.log(`App RENDERING`);
 
-
   const [productsList, setProductsList] = useState([]);
 
   useEffect(() => {
