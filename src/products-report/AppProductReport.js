@@ -1,26 +1,26 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import apiProdReport from '../apiProdReport';
 import CardList from './containers/Cards/CardsList';
+import apiGateway from "../apiGateway";
 
-const AppProductReport = () => {
+const AppProductReport = (props) => {
   console.log(`App RENDERING`);
 
   const [productsList, setProductsList] = useState([]);
 
   useEffect(() => {
-    apiProdReport.get().then(response => {
+    apiGateway.get().then(response => {
         setProductsList(response.data);
       });
   }, [])
 
   async function onRemoveItemHandler(id){
-    await apiProdReport.delete("/" + id).then(response => {
+    await apiGateway.delete("/product" + id).then(response => {
         console.log(response)
     });
 
-    await apiProdReport.get().then(response => {
-        setProductsList(response.data);
-    });
+    await apiGateway.get("/product/expired", props.getHeader()).then(response => {
+      setProductsList(response.data);
+  });
 };
 
   return (

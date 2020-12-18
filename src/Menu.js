@@ -18,7 +18,7 @@ export default function Menu(props) {
           <br></br>
         {toggle === 'U' && <AppUser getHeader={props.getHeader}/> }
         {toggle === 'P' && <AppProduct getHeader={props.getHeader}/> }
-        {toggle === 'R' && <AppProductReport/> }
+        {toggle === 'R' && <AppProductReport getHeader={props.getHeader}/> }
       </div>
   );
 }
