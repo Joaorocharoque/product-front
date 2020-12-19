@@ -8,13 +8,13 @@ const AppProductReport = (props) => {
   const [productsList, setProductsList] = useState([]);
 
   useEffect(() => {
-    apiGateway.get().then(response => {
+    apiGateway.get("/product/expired", props.getHeader()).then(response => {
         setProductsList(response.data);
       });
   }, [])
 
   async function onRemoveItemHandler(id){
-    await apiGateway.delete("/product" + id).then(response => {
+    await apiGateway.delete("/product" + id, props.getHeader()).then(response => {
         console.log(response)
     });
 
