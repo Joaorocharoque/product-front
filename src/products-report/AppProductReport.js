@@ -3,7 +3,6 @@ import CardList from './containers/Cards/CardsList';
 import apiGateway from "../apiGateway";
 
 const AppProductReport = (props) => {
-  console.log(`App RENDERING`);
 
   const [productsList, setProductsList] = useState([]);
 
@@ -14,8 +13,7 @@ const AppProductReport = (props) => {
   }, [])
 
   async function onRemoveItemHandler(id){
-    await apiGateway.delete("/product" + id, props.getHeader()).then(response => {
-        console.log(response)
+    await apiGateway.delete("/product/" + id, props.getHeader()).then(response => {
     });
 
     await apiGateway.get("/product/expired", props.getHeader()).then(response => {
